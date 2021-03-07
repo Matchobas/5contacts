@@ -60,10 +60,10 @@ public class PerfilUsuario_Activity extends AppCompatActivity implements BottomN
         }
         if (user != null) {
                    edUser.setText(user.getLogin());
-                    edPass.setText(user.getSenha());
-                    edNome.setText(user.getNome());
-                    edEmail.setText(user.getEmail());
-                    swLogado.setChecked(user.isManterLogado());
+                   edPass.setText(user.getSenha());
+                   edNome.setText(user.getNome());
+                   edEmail.setText(user.getEmail());
+                   swLogado.setChecked(user.isManterLogado());
         }
 
         btModificar.setOnClickListener(new View.OnClickListener() {
@@ -91,7 +91,7 @@ public class PerfilUsuario_Activity extends AppCompatActivity implements BottomN
         }
         // Checagem de o Item selecionado é Ligar
         if (item.getItemId() == R.id.anvLigar) {
-            //Abertura da Tela Mudar COntatos
+            //Abertura da Tela Mudar Contatos
             Intent intent = new Intent(this, ListaDeContatos_Activity.class);
             intent.putExtra("usuario", user);
             startActivity(intent);

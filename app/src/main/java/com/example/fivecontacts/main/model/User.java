@@ -40,6 +40,7 @@ public class User implements Serializable {
     public void setLogin(String login) {
         this.login = login;
     }
+
     public String getSenha() {
         return senha;
     }
@@ -63,6 +64,7 @@ public class User implements Serializable {
     public void setManterLogado(boolean manterLogado) {
         this.manterLogado = manterLogado;
     }
+    
     public ArrayList<Contato> getContatos() {
         return contatos;
     }
