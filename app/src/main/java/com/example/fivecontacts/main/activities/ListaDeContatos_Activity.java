@@ -106,9 +106,49 @@ public class ListaDeContatos_Activity extends AppCompatActivity implements UIEdu
 
 
         }
-        Log.v("PDM3","contatos:"+contatos.size());
+        Log.v("PDM3","contatos:" + contatos.size());
         user.setContatos(contatos);
     }
+
+    protected void deletarContatoDaLista(Contato w){
+        SharedPreferences resgatarContatosAtuais = getSharedPreferences("contatos", Activity.MODE_PRIVATE);
+
+        int numero = resgatarContatosAtuais.getInt("numContatos", 0);
+
+        Contato contato;
+        int toBeDeleted = 0;
+
+        // Laço começa por 1 pois os contatos são salvos a partir de 1
+        for (int i = 1; i <= numero; i++) {
+            String objSel = resgatarContatosAtuais.getString("contato" + i, "");
+            if (objSel.compareTo("") != 0) {
+                try {
+                    ByteArrayInputStream bis = new ByteArrayInputStream(objSel.getBytes(StandardCharsets.ISO_8859_1.name()));
+                    ObjectInputStream oos = new ObjectInputStream(bis);
+                    contato = (Contato) oos.readObject();
+
+                    // Checando se o contato deserializado recebido não é nulo E tem o número igual ao enviado
+                    if (contato != null && w.getNumero().equals(contato.getNumero())) {
+                        toBeDeleted = i;
+                        break;
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        SharedPreferences.Editor editor = resgatarContatosAtuais.edit();
+        editor.remove("contato" + toBeDeleted);
+        editor.commit();
+
+        Toast.makeText(this, "Contato deletado com sucesso!", Toast.LENGTH_LONG).show();
+
+        user = atualizarUser();
+        atualizarListaDeContatos(user);
+    }
+
     protected void preencherListViewImagens(User user){
 
         final ArrayList<Contato> contatos = user.getContatos();
@@ -122,7 +162,7 @@ public class ListaDeContatos_Activity extends AppCompatActivity implements UIEdu
                 contatosAbrevs[j] =contatos.get(j).getNome().substring(0, 1);
                 contatosNomes[j] =contatos.get(j).getNome();
             }
-            ArrayList<Map<String,Object>> itemDataList = new ArrayList<Map<String,Object>>();;
+            final ArrayList<Map<String,Object>> itemDataList = new ArrayList<Map<String,Object>>();;
 
             for(int i =0; i < contatos.size(); i++) {
                 Map<String,Object> listItemMap = new HashMap<String,Object>();
@@ -131,7 +171,7 @@ public class ListaDeContatos_Activity extends AppCompatActivity implements UIEdu
                 listItemMap.put("abrevs",contatosAbrevs[i]);
                 itemDataList.add(listItemMap);
             }
-            SimpleAdapter simpleAdapter = new SimpleAdapter(this,itemDataList,R.layout.list_view_layout_imagem,
+            final SimpleAdapter simpleAdapter = new SimpleAdapter(this,itemDataList,R.layout.list_view_layout_imagem,
                     new String[]{"imageId","contato","abrevs"},new int[]{R.id.userImage, R.id.userTitle,R.id.userAbrev});
 
             lv.setAdapter(simpleAdapter);
@@ -150,6 +190,20 @@ public class ListaDeContatos_Activity extends AppCompatActivity implements UIEdu
                     Intent itLigar = new Intent(Intent.ACTION_CALL, uri);
                     startActivity(itLigar);
                 }
+                }
+            });
+
+            lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                    Contato contato = contatos.get(position);
+                    itemDataList.remove(position);
+
+                    deletarContatoDaLista(contato);
+
+                    simpleAdapter.notifyDataSetChanged();
+
+                    return false;
                 }
             });
         }
@@ -173,24 +227,22 @@ public class ListaDeContatos_Activity extends AppCompatActivity implements UIEdu
 
             lv.setAdapter(adaptador);
 
-
             lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                    if (checarPermissaoPhone_SMD()) {
+                if (checarPermissaoPhone_SMD()) {
 
-                        Uri uri = Uri.parse(contatos.get(i).getNumero());
-                      //   Intent itLigar = new Intent(Intent.ACTION_DIAL, uri);
-                        Intent itLigar = new Intent(Intent.ACTION_CALL, uri);
-                        startActivity(itLigar);
-                    }
-
+                    Uri uri = Uri.parse(contatos.get(i).getNumero());
+                  //   Intent itLigar = new Intent(Intent.ACTION_DIAL, uri);
+                    Intent itLigar = new Intent(Intent.ACTION_CALL, uri);
+                    startActivity(itLigar);
+                }
 
                 }
             });
-        }//fim do IF do tamanho de contatos
+        } //fim do IF do tamanho de contatos
     }
 
     protected boolean checarPermissaoPhone_SMD(){
@@ -279,17 +331,17 @@ public class ListaDeContatos_Activity extends AppCompatActivity implements UIEdu
 
         if (requestCode == 1111) { //Retorno de Mudar Perfil
             bnv.setSelectedItemId(R.id.anvLigar);
-            user=atualizarUser();
+            user = atualizarUser();
             setTitle("Contatos de Emergência de "+ user.getNome());
             atualizarListaDeContatos(user);
            // preencherListViewImagens(user);
             preencherListView(user); //Montagem do ListView
         }
 
-        if (requestCode == 1112) {//Retorno de Mudar Contatos
+        if (requestCode == 1112) { //Retorno de Mudar Contatos
             bnv.setSelectedItemId(R.id.anvLigar);
             atualizarListaDeContatos(user);
-            //preencherListViewImagens(user);
+            // preencherListViewImagens(user);
             preencherListView(user); //Montagem do ListView
         }
 
@@ -306,7 +358,7 @@ public class ListaDeContatos_Activity extends AppCompatActivity implements UIEdu
         String emailSalvo = temUser.getString("email","");
         boolean manterLogado=temUser.getBoolean("manterLogado",false);
 
-        user=new User(nomeSalvo,loginSalvo,senhaSalva,emailSalvo,manterLogado);
+        user = new User(nomeSalvo,loginSalvo,senhaSalva,emailSalvo,manterLogado);
         return user;
     }
 

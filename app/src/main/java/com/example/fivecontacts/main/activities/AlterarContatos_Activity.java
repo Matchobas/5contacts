@@ -86,10 +86,10 @@ public class AlterarContatos_Activity extends AppCompatActivity implements Botto
             dt = new ByteArrayOutputStream();
             oos = new ObjectOutputStream(dt);
             oos.writeObject(w);
-            String contatoSerializado= dt.toString(StandardCharsets.ISO_8859_1.name());
-            editor.putString("contato"+ (num + 1), contatoSerializado);
+            String contatoSerializado = dt.toString(StandardCharsets.ISO_8859_1.name());
+            editor.putString("contato" + (num + 1), contatoSerializado);
             editor.putInt("numContatos", num + 1);
-        }catch(Exception e){
+        } catch (Exception e){
             e.printStackTrace();
         }
         editor.commit();
