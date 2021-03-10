@@ -8,7 +8,9 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -147,6 +149,34 @@ public class ListaDeContatos_Activity extends AppCompatActivity implements UIEdu
 
         user = atualizarUser();
         atualizarListaDeContatos(user);
+        preencherListViewImagens(user);
+    }
+
+    protected boolean deleteDialog(final Contato c){
+        final boolean[] deletePermission = {false};
+
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        deletarContatoDaLista(c);
+                        break;
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        break;
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Vocẽ realmente quer deletar esse contato?")
+                .setPositiveButton("Sim", dialogClickListener)
+                .setNegativeButton("Não", dialogClickListener)
+                .show();
+
+        Log.v("PDM3", "Resultado " + deletePermission[0]);
+
+        return false;
     }
 
     protected void preencherListViewImagens(User user){
@@ -176,7 +206,6 @@ public class ListaDeContatos_Activity extends AppCompatActivity implements UIEdu
 
             lv.setAdapter(simpleAdapter);
 
-
             lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
                 @Override
@@ -193,15 +222,12 @@ public class ListaDeContatos_Activity extends AppCompatActivity implements UIEdu
                 }
             });
 
+            // Função para deletar um contato na lista
             lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                 @Override
                 public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                     Contato contato = contatos.get(position);
-                    itemDataList.remove(position);
-
-                    deletarContatoDaLista(contato);
-
-                    simpleAdapter.notifyDataSetChanged();
+                    boolean deleted = deleteDialog(contato);
 
                     return false;
                 }
@@ -221,7 +247,7 @@ public class ListaDeContatos_Activity extends AppCompatActivity implements UIEdu
                 nomesSP[j] = contatos.get(j).getNome();
             }
 
-            ArrayAdapter<String> adaptador;
+            final ArrayAdapter<String> adaptador;
 
             adaptador = new ArrayAdapter<String>(this, R.layout.list_view_layout, nomesSP);
 
@@ -235,14 +261,25 @@ public class ListaDeContatos_Activity extends AppCompatActivity implements UIEdu
                 if (checarPermissaoPhone_SMD()) {
 
                     Uri uri = Uri.parse(contatos.get(i).getNumero());
-                  //   Intent itLigar = new Intent(Intent.ACTION_DIAL, uri);
+                    // Intent itLigar = new Intent(Intent.ACTION_DIAL, uri);
                     Intent itLigar = new Intent(Intent.ACTION_CALL, uri);
                     startActivity(itLigar);
                 }
 
                 }
             });
-        } //fim do IF do tamanho de contatos
+
+            // Função para deletar um contato na lista
+            lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                    Contato contato = contatos.get(position);
+                    boolean deleted = deleteDialog(contato);
+
+                    return false;
+                }
+            });
+        } // fim do IF do tamanho de contatos
     }
 
     protected boolean checarPermissaoPhone_SMD(){
@@ -373,7 +410,6 @@ public class ListaDeContatos_Activity extends AppCompatActivity implements UIEdu
 
 
     }
-
 }
 
 
