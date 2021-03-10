@@ -67,8 +67,8 @@ public class ListaDeContatos_Activity extends AppCompatActivity implements UIEdu
                 //Recuperando o Usuario
                 user = (User) params.getSerializable("usuario");
                 if (user != null) {
-                    setTitle("Contatos de Emergência de "+user.getNome());
-                  //  preencherListView(user); //Montagem do ListView
+                    setTitle("Contatos de Emergência de " + user.getNome());
+                    // Montagem do ListView
                     preencherListViewImagens(user);
                 }
             }
@@ -109,7 +109,7 @@ public class ListaDeContatos_Activity extends AppCompatActivity implements UIEdu
         Log.v("PDM3","contatos:"+contatos.size());
         user.setContatos(contatos);
     }
-    protected  void preencherListViewImagens(User user){
+    protected void preencherListViewImagens(User user){
 
         final ArrayList<Contato> contatos = user.getContatos();
         Collections.sort(contatos);
@@ -142,22 +142,19 @@ public class ListaDeContatos_Activity extends AppCompatActivity implements UIEdu
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                    if (checarPermissaoPhone_SMD()) {
+                // FAZER com que se não tenha permissão só encaminhe pro DIAL com o número!
+                if (checarPermissaoPhone_SMD()) {
 
-                        Uri uri = Uri.parse(contatos.get(i).getNumero());
-                        //   Intent itLigar = new Intent(Intent.ACTION_DIAL, uri);
-                        Intent itLigar = new Intent(Intent.ACTION_CALL, uri);
-                        startActivity(itLigar);
-                    }
-
-
+                    Uri uri = Uri.parse(contatos.get(i).getNumero());
+                    // Intent itLigar = new Intent(Intent.ACTION_DIAL, uri);
+                    Intent itLigar = new Intent(Intent.ACTION_CALL, uri);
+                    startActivity(itLigar);
+                }
                 }
             });
-
         }
-
-
     }
+
     protected void preencherListView(User user) {
 
         final ArrayList<Contato> contatos = user.getContatos();
@@ -198,40 +195,39 @@ public class ListaDeContatos_Activity extends AppCompatActivity implements UIEdu
 
     protected boolean checarPermissaoPhone_SMD(){
 
-      if (ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE)
-      == PackageManager.PERMISSION_GRANTED){
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE)
+        == PackageManager.PERMISSION_GRANTED){
 
           Log.v ("SMD","Tenho permissão");
 
           return true;
 
-      } else {
+        } else {
 
-            if ( shouldShowRequestPermissionRationale(Manifest.permission.CALL_PHONE)){
+            if (shouldShowRequestPermissionRationale(Manifest.permission.CALL_PHONE)){
 
                 Log.v ("SMD","Primeira Vez");
 
-
                 String mensagem = "Nossa aplicação precisa acessar o telefone para discagem automática. Uma janela de permissão será solicitada";
                 String titulo = "Permissão de acesso a chamadas";
-                int codigo =1;
-                UIEducacionalPermissao mensagemPermissao = new UIEducacionalPermissao(mensagem,titulo, codigo);
+                int codigo = 1;
+                UIEducacionalPermissao mensagemPermissao = new UIEducacionalPermissao(mensagem, titulo, codigo);
 
                 mensagemPermissao.onAttach ((Context)this);
                 mensagemPermissao.show(getSupportFragmentManager(), "primeiravez2");
 
-            }else{
+            } else {
                 String mensagem = "Nossa aplicação precisa acessar o telefone para discagem automática. Uma janela de permissão será solicitada";
                 String titulo = "Permissão de acesso a chamadas II";
-                int codigo =1;
+                int codigo = 1;
 
-                UIEducacionalPermissao mensagemPermissao = new UIEducacionalPermissao(mensagem,titulo, codigo);
+                UIEducacionalPermissao mensagemPermissao = new UIEducacionalPermissao(mensagem, titulo, codigo);
                 mensagemPermissao.onAttach ((Context)this);
                 mensagemPermissao.show(getSupportFragmentManager(), "segundavez2");
                 Log.v ("SMD","Outra Vez");
-
             }
-      }
+        }
+
         return false;
     }
 
@@ -241,9 +237,9 @@ public class ListaDeContatos_Activity extends AppCompatActivity implements UIEdu
                                             int[] grantResults) {
         switch (requestCode) {
             case 2222:
-               if(grantResults[0]==PackageManager.PERMISSION_GRANTED){
+               if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
                    Toast.makeText(this, "VALEU", Toast.LENGTH_LONG).show();
-               }else{
+               } else {
                    Toast.makeText(this, "SEU FELA!", Toast.LENGTH_LONG).show();
 
                    String mensagem= "Seu aplicativo pode ligar diretamente, mas sem permissão não funciona. Se você marcou não perguntar mais, você deve ir na tela de configurações para mudar a instalação ou reinstalar o aplicativo  ";
@@ -252,10 +248,11 @@ public class ListaDeContatos_Activity extends AppCompatActivity implements UIEdu
                    mensagemPermisso.onAttach((Context)this);
                    mensagemPermisso.show(getSupportFragmentManager(), "segundavez");
                }
-                break;
+               break;
         }
     }
-            @Override
+
+    @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Checagem de o Item selecionado é o do perfil
         if (item.getItemId() == R.id.anvPerfil) {
@@ -280,10 +277,10 @@ public class ListaDeContatos_Activity extends AppCompatActivity implements UIEdu
         super.onActivityResult(requestCode, resultCode, data);
         //Caso seja um Voltar ou Sucesso selecionar o item Ligar
 
-        if (requestCode == 1111) {//Retorno de Mudar Perfil
+        if (requestCode == 1111) { //Retorno de Mudar Perfil
             bnv.setSelectedItemId(R.id.anvLigar);
             user=atualizarUser();
-            setTitle("Contatos de Emergência de "+user.getNome());
+            setTitle("Contatos de Emergência de "+ user.getNome());
             atualizarListaDeContatos(user);
            // preencherListViewImagens(user);
             preencherListView(user); //Montagem do ListView
@@ -324,7 +321,6 @@ public class ListaDeContatos_Activity extends AppCompatActivity implements UIEdu
 
 
     }
-
 
 }
 

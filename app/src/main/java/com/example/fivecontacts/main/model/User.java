@@ -9,15 +9,15 @@ public class User implements Serializable {
     String login;
     String senha;
     String email;
-    boolean manterLogado=false;
+    boolean manterLogado = false;
     ArrayList<Contato> contatos;
 
     public User(String nome, String login, String password, String email, boolean manterLogado) {
         this.nome = nome;
-        this.login=login;
-        this.senha=password;
-        this.email=email;
-        this.manterLogado=manterLogado;
+        this.login = login;
+        this.senha = password;
+        this.email = email;
+        this.manterLogado = manterLogado;
         this.contatos = new ArrayList<Contato>();
     }
 
