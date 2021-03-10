@@ -101,7 +101,7 @@ public class PerfilUsuario_Activity extends AppCompatActivity implements BottomN
     }
 
     public void salvarModificacoes(User user){
-        SharedPreferences salvaUser= getSharedPreferences("usuarioPadrao", Activity.MODE_PRIVATE);
+        SharedPreferences salvaUser = getSharedPreferences("usuarioPadrao", Activity.MODE_PRIVATE);
         SharedPreferences.Editor escritor= salvaUser.edit();
 
         escritor.putString("nome",user.getNome());
@@ -111,9 +111,6 @@ public class PerfilUsuario_Activity extends AppCompatActivity implements BottomN
         //Escrever no SharedPreferences
         escritor.putString("email",user.getEmail());
         escritor.putBoolean("manterLogado",user.isManterLogado());
-
-
-        //Falta Salvar o E-mail
 
         escritor.commit(); //Salva em Disco
 
