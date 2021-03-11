@@ -10,7 +10,7 @@
             android:icon="@drawable/ic_action_ligar"
             android:title="Ligar" />
         <item
-            android:id="@+id/anvMudar"
+            android:id="@+id/anvAdicionar"
             android:icon="@drawable/ic_action_mudar"
             android:title="Adicionar Contatos" />
         <item

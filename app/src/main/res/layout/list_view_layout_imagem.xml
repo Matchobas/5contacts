@@ -8,14 +8,14 @@
     android:orientation="horizontal">
 
     <ImageView
-        android:id="@+id/userImage"
+        android:id="@+id/listImage"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:gravity="center_vertical"
         android:paddingStart="10dp" />
 
     <TextView
-        android:id="@+id/userAbrev"
+        android:id="@+id/contactAbrev"
         android:layout_width="60dp"
         android:layout_height="match_parent"
         android:gravity="center_vertical"
@@ -26,7 +26,7 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/userTitle"
+        android:id="@+id/contactName"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_vertical"

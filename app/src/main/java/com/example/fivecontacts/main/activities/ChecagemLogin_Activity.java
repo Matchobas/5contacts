@@ -29,39 +29,41 @@ import java.util.ArrayList;
 
 public class ChecagemLogin_Activity extends AppCompatActivity {
 
-    boolean primeiraVezUser=true;
-    boolean primeiraVezSenha=true;
+    boolean primeiraVezUser = true;
+    boolean primeiraVezSenha = true;
     EditText edUser;
     EditText edPass;
     Button btLogar;
     Button btNovo;
     TextView mTextView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_checagem_login);
 
-        //Existe um usuário padrão logado?
+        // Checando se existe um usuário padrão logado
         if(montarObjetoUserSemLogar()){
             User user = montarObjetoUser();
             preencherListaDeContatos(user);
-            //Abrir a atividade de Lista de Contatos
+
+            // Abrindo diretamente a atividade de Lista de Contatos salvos
             Intent intent = new Intent(ChecagemLogin_Activity.this, ListaDeContatos_Activity.class);
             intent.putExtra("usuario",user);
             startActivity(intent);
             finish();
 
-        }else { //Checar Usuário e Senha ou clicar em criar novo
+        }else { // Checar Usuário e Senha ou clicar em criar novo
             btLogar = findViewById(R.id.btLogar);
             btNovo = findViewById(R.id.btNovo);
             edUser = findViewById(R.id.edT_Login);
             edPass = findViewById(R.id.edt_Pass);
 
-            //Colocando Underline (Vamos usar esse campo mais na frente com o FireBase)
+            // Campo para utilizar no FireBase futuramente
             mTextView = findViewById(R.id.tvEsqueceuSenha);
             mTextView.setPaintFlags(mTextView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
-            //Evento de limpar Componente
+            // Evento de limpar Componente
             edUser.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -73,7 +75,7 @@ public class ChecagemLogin_Activity extends AppCompatActivity {
                 }
             });
 
-            //Evento de limpar Componente
+            // Evento de limpar Componente
             edPass.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -91,28 +93,30 @@ public class ChecagemLogin_Activity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
 
-                    //Ao clicar deve-se:
-                    //1- Checar se existe um SharedPreferences
-                    //2- Comparar login e senha salvos
-                    //3- Se tudo der certo, resgatar lista de contatos
-                    //4- Abrir a Atividade lista de Contatos passando como parametro o objeto User e seus 5 Contatos
+                    /**
+                     * Ao clicar deve-se:
+                     * 1- Checar se existe um SharedPreferences
+                     * 2- Comparar login e senha salvos
+                     * 3- Se tudo der certo, resgatar lista de contatos
+                     * 4- Abrir a Atividade lista de Contatos passando como parametro o objeto User e seus 5 Contatos
+                     */
 
                     SharedPreferences temUser = getSharedPreferences("usuarioPadrao", Activity.MODE_PRIVATE);
                     String loginSalvo = temUser.getString("login", "");
                     String senhaSalva = temUser.getString("senha", "");
 
                     if ((loginSalvo != null) && (senhaSalva != null)) {
-                        //Recuperando da tela
+                        // Recuperando da tela
                         String senha = edPass.getText().toString();
                         String login = edUser.getText().toString();
 
-                        //Comparando
+                        // Comparando login e senha salvos
                         if ((loginSalvo.compareTo(login) == 0)
                                 && (senhaSalva.compareTo(senha) == 0)) {
 
                             User user = montarObjetoUser();
                             preencherListaDeContatos(user);
-                            //Abrindo a Lista de Contatos
+                            // Abrindo a Lista de Contatos
                             Intent intent = new Intent(ChecagemLogin_Activity.this, ListaDeContatos_Activity.class);
                             intent.putExtra("usuario", user);
                             startActivity(intent);
@@ -127,11 +131,10 @@ public class ChecagemLogin_Activity extends AppCompatActivity {
                         Toast.makeText(ChecagemLogin_Activity.this, "Login e Senha nulos", Toast.LENGTH_LONG).show();
 
                     }
-
                 }
             });
 
-            //Novo Usuário
+            // Indo para tela de novo usuário
             btNovo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -145,19 +148,19 @@ public class ChecagemLogin_Activity extends AppCompatActivity {
 
     private User montarObjetoUser() {
         User user = null;
-        SharedPreferences temUser= getSharedPreferences("usuarioPadrao", Activity.MODE_PRIVATE);
+        SharedPreferences temUser = getSharedPreferences("usuarioPadrao", Activity.MODE_PRIVATE);
         String loginSalvo = temUser.getString("login","");
         String senhaSalva = temUser.getString("senha","");
         String nomeSalvo = temUser.getString("nome","");
         String emailSalvo = temUser.getString("email","");
-        boolean manterLogado=temUser.getBoolean("manterLogado",false);
+        boolean manterLogado = temUser.getBoolean("manterLogado",false);
 
-        user=new User(nomeSalvo,loginSalvo,senhaSalva,emailSalvo,manterLogado);
+        user = new User(nomeSalvo,loginSalvo,senhaSalva,emailSalvo,manterLogado);
         return user;
     }
 
     private boolean montarObjetoUserSemLogar() {
-        SharedPreferences temUser= getSharedPreferences("usuarioPadrao", Activity.MODE_PRIVATE);
+        SharedPreferences temUser = getSharedPreferences("usuarioPadrao", Activity.MODE_PRIVATE);
         boolean manterLogado = temUser.getBoolean("manterLogado",false);
         return manterLogado;
     }
@@ -170,7 +173,6 @@ public class ChecagemLogin_Activity extends AppCompatActivity {
         ArrayList<Contato> contatos = new ArrayList<Contato>();
 
         Contato contato;
-
 
         for (int i = 1; i <= num; i++) {
             String objSel = recuperarContatos.getString("contato" + i, "");
@@ -188,12 +190,9 @@ public class ChecagemLogin_Activity extends AppCompatActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
-
-
         }
+
         user.setContatos(contatos);
     }
-
 }

@@ -37,34 +37,34 @@ public class NovoUsuario_Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_novo_usuario);
 
-        btCriar=findViewById(R.id.btCriar);
-        edUser=findViewById(R.id.edT_Login2);
-        edPass=findViewById(R.id.edt_Pass2);
-        edNome=findViewById(R.id.edtNome);
-        edEmail=findViewById(R.id.edEmail);
-        swLogado=findViewById(R.id.swLogado);
+        btCriar = findViewById(R.id.btCriar);
+        edUser = findViewById(R.id.edT_Login2);
+        edPass = findViewById(R.id.edt_Pass2);
+        edNome = findViewById(R.id.edtNome);
+        edEmail = findViewById(R.id.edEmail);
+        swLogado = findViewById(R.id.swLogado);
         setTitle("Novo Usuário");
 
 
-        //Evento de limpar Componente
+        // Evento de limpar Componente
         edUser.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (primeiraVezUser){
-                    primeiraVezUser=false;
+                    primeiraVezUser = false;
                     edUser.setText("");
                 }
 
                 return false;
             }
         });
-        //Evento de limpar Componente
+        // Evento de limpar Componente
 
         edPass.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (primeiraVezSenha){
-                    primeiraVezSenha=false;
+                    primeiraVezSenha = false;
                     edPass.setText("");
                     edPass.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD
                     );
@@ -73,13 +73,13 @@ public class NovoUsuario_Activity extends AppCompatActivity {
             }
         });
 
-        //Evento de limpar Componente - E-mail
+        // Evento de limpar Componente - E-mail
 
         edEmail.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (primeiraVezEmail){
-                    primeiraVezEmail=false;
+                    primeiraVezEmail = false;
                     edEmail.setText("");
                 }
 
@@ -87,13 +87,13 @@ public class NovoUsuario_Activity extends AppCompatActivity {
             }
         });
 
-        //Evento de limpar Componente - Nome
+        // Evento de limpar Componente - Nome
 
         edNome.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (primeiraVezNome){
-                    primeiraVezNome=false;
+                    primeiraVezNome = false;
                     edNome.setText("");
                 }
 
@@ -120,33 +120,31 @@ public class NovoUsuario_Activity extends AppCompatActivity {
                 manterLogado= swLogado.isChecked();
 
 
-                SharedPreferences salvaUser= getSharedPreferences("usuarioPadrao", Activity.MODE_PRIVATE);
-                SharedPreferences.Editor escritor= salvaUser.edit();
+                SharedPreferences salvaUser = getSharedPreferences("usuarioPadrao", Activity.MODE_PRIVATE);
+                SharedPreferences.Editor escritor = salvaUser.edit();
 
                 escritor.putString("nome",nome);
                 escritor.putString("senha",senha);
                 escritor.putString("login",login);
 
-                //Escrever no SharedPreferences
+                // Escrever no SharedPreferences
                 escritor.putString("email",email);
                 escritor.putBoolean("manterLogado",manterLogado);
 
 
-                //Falta Salvar o E-mail
+                // Falta Salvar o E-mail
 
                 escritor.commit(); //Salva em Disco
 
-                //Salvando o user
+                // Salvando o user
 
-                User user =new User(nome,login,senha,email,manterLogado);
+                User user = new User(nome, login, senha, email, manterLogado);
 
-                Intent intent=new Intent(NovoUsuario_Activity.this, AlterarContatos_Activity.class);
+                Intent intent = new Intent(NovoUsuario_Activity.this, AlterarContatos_Activity.class);
                 intent.putExtra("usuario",user);
                 startActivity(intent);
 
-                //Mesmo após a chamar de um startActivity o método continuará execuntando
-                //Por exemplo, aqui mataremos a Activity atual porém a Pick_Contacts é aqui será exibida
-                Log.v("PDMv2","passei do StartActivity");
+                Log.v("PDMMat2","passei do StartActivity");
                 finish();
             }
         });

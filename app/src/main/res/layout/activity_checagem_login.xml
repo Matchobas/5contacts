@@ -7,16 +7,30 @@
 
     tools:context=".main.activities.ChecagemLogin_Activity">
 
+    <TextView
+        android:id="@+id/appTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="5 Contatos!"
+        android:textColor="#650077"
+        android:textSize="42sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
-        android:layout_marginTop="70dp"
+        android:layout_marginTop="120dp"
         android:layout_marginEnd="15dp"
         android:background="#CC5AFB36"
         android:paddingBottom="20dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -28,7 +42,7 @@
             android:ems="10"
             android:fontFamily="sans-serif-black"
             android:inputType="textPersonName"
-            android:text="Bem vindo"
+            android:text="Seja bem vindo"
             android:textAlignment="center"
             android:textColor="#A80BC3"
             android:textColorLink="#FFFFFF"
@@ -38,6 +52,18 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/mensagemLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Já possui login?"
+            android:textColor="#A80BC3"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toTopOf="@+id/edT_Login"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvMensagem" />
 
         <EditText
             android:id="@+id/edT_Login"
@@ -98,25 +124,23 @@
             android:text="Novo"
             android:textColor="#FFFFFF"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/tvEsqueceuSenha"
-            app:layout_constraintStart_toStartOf="@+id/btLogar" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/btLogar"
+            app:layout_constraintStart_toStartOf="@+id/btLogar"
+            app:layout_constraintTop_toBottomOf="@+id/btLogar" />
 
         <TextView
             android:id="@+id/tvEsqueceuSenha"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="54dp"
-            android:autoLink="all"
-            android:linksClickable="false"
-            android:selectAllOnFocus="false"
+            android:layout_marginTop="10dp"
             android:text="Esqueceu a senha?"
             android:textColor="#A80BC3"
-            android:textColorLink="#650077"
-            android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/btNovo"
-            app:layout_constraintTop_toBottomOf="@+id/btLogar" />
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btNovo" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

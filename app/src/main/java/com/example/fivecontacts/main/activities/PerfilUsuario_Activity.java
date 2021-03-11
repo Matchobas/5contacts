@@ -7,9 +7,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.InputType;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -37,44 +35,46 @@ public class PerfilUsuario_Activity extends AppCompatActivity implements BottomN
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_perfil_usuario);
 
-        btModificar=findViewById(R.id.btCriar);
-        bnv=findViewById(R.id.bnv);
+        btModificar = findViewById(R.id.btCriar);
+        bnv = findViewById(R.id.bnv);
         bnv.setOnNavigationItemSelectedListener(this);
         bnv.setSelectedItemId(R.id.anvPerfil);
 
-        edUser=findViewById(R.id.edT_Login2);
-        edPass=findViewById(R.id.edt_Pass2);
-        edNome=findViewById(R.id.edtNome);
-        edEmail=findViewById(R.id.edEmail);
-        swLogado=findViewById(R.id.swLogado);
+        edUser = findViewById(R.id.edT_Login2);
+        edPass = findViewById(R.id.edt_Pass2);
+        edNome = findViewById(R.id.edtNome);
+        edEmail = findViewById(R.id.edEmail);
+        swLogado = findViewById(R.id.swLogado);
 
+        // Recuperando dados da Intent anterior
         Intent quemChamou = this.getIntent();
         if (quemChamou != null) {
             Bundle params = quemChamou.getExtras();
             if (params != null) {
-                //Recuperando o Usuario
+                // Recuperando o Usuario
                 user = (User) params.getSerializable("usuario");
                 setTitle("Alterar dados de "+user.getNome());
 
             }
         }
+
         if (user != null) {
-                   edUser.setText(user.getLogin());
-                   edPass.setText(user.getSenha());
-                   edNome.setText(user.getNome());
-                   edEmail.setText(user.getEmail());
-                   swLogado.setChecked(user.isManterLogado());
+           edUser.setText(user.getLogin());
+           edPass.setText(user.getSenha());
+           edNome.setText(user.getNome());
+           edEmail.setText(user.getEmail());
+           swLogado.setChecked(user.isManterLogado());
         }
 
         btModificar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                user.setNome(edNome.getText().toString());
-                user.setLogin(edUser.getText().toString());
-                user.setSenha(edPass.getText().toString());
-                user.setEmail(edEmail.getText().toString());
-                user.setManterLogado(swLogado.isChecked());
-                salvarModificacoes(user);
+            user.setNome(edNome.getText().toString());
+            user.setLogin(edUser.getText().toString());
+            user.setSenha(edPass.getText().toString());
+            user.setEmail(edEmail.getText().toString());
+            user.setManterLogado(swLogado.isChecked());
+            salvarModificacoes(user);
             }
         });
     }
@@ -82,39 +82,37 @@ public class PerfilUsuario_Activity extends AppCompatActivity implements BottomN
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Checagem de o Item selecionado é a de mudanças de contatos
-        if (item.getItemId() == R.id.anvMudar) {
+        if (item.getItemId() == R.id.anvAdicionar) {
             //Abertura da Tela de Perfil
             Intent intent = new Intent(this, AlterarContatos_Activity.class);
             intent.putExtra("usuario", user);
             startActivity(intent);
-
         }
-        // Checagem de o Item selecionado é Ligar
+
+        // Checagem de o Item selecionado é menu de Ligar
         if (item.getItemId() == R.id.anvLigar) {
-            //Abertura da Tela Mudar Contatos
+            //Abertura da Tela Contatos Salvos
             Intent intent = new Intent(this, ListaDeContatos_Activity.class);
             intent.putExtra("usuario", user);
             startActivity(intent);
-
         }
         return true;
     }
 
     public void salvarModificacoes(User user){
         SharedPreferences salvaUser = getSharedPreferences("usuarioPadrao", Activity.MODE_PRIVATE);
-        SharedPreferences.Editor escritor= salvaUser.edit();
+        SharedPreferences.Editor escritor = salvaUser.edit();
 
+        // Escrever novas informações no SharedPreferences
         escritor.putString("nome",user.getNome());
         escritor.putString("senha",user.getSenha());
         escritor.putString("login",user.getLogin());
-
-        //Escrever no SharedPreferences
         escritor.putString("email",user.getEmail());
         escritor.putBoolean("manterLogado",user.isManterLogado());
 
-        escritor.commit(); //Salva em Disco
+        escritor.commit(); // Salva em Disco
 
-        Toast.makeText(PerfilUsuario_Activity.this,"Modificações Salvas",Toast.LENGTH_LONG).show() ;
+        Toast.makeText(PerfilUsuario_Activity.this,"Modificações feitas com sucesso!",Toast.LENGTH_LONG).show() ;
 
         finish();
     }

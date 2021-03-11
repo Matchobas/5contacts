@@ -46,20 +46,21 @@ public class AlterarContatos_Activity extends AppCompatActivity implements Botto
         edtNome = findViewById(R.id.edtBusca);
         bnv = findViewById(R.id.bnv);
         bnv.setOnNavigationItemSelectedListener(this);
-        bnv.setSelectedItemId(R.id.anvMudar);
+        bnv.setSelectedItemId(R.id.anvAdicionar);
 
-        //Dados da Intent Anterior
+        // Recuperando dados da Intent anterior
         Intent quemChamou = this.getIntent();
         if (quemChamou != null) {
             Bundle params = quemChamou.getExtras();
             if (params != null) {
-                //Recuperando o Usuario
+                // Recuperando o Usuario
                 user = (User) params.getSerializable("usuario");
                 setTitle("Alterar Contatos de Emergência");
             }
         }
         lv = findViewById(R.id.listContatosDoCell);
-        //Evento de limpar Componente
+
+        // Evento de limpar Componente
         edtNome.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -74,49 +75,49 @@ public class AlterarContatos_Activity extends AppCompatActivity implements Botto
     }
 
     // Função para salvar contato, chamada quando escolhemos um contato dos que foram buscados
-    public void salvarContato (Contato w){
+    public void salvarContato (Contato c){
         SharedPreferences salvaContatos =
                 getSharedPreferences("contatos",Activity.MODE_PRIVATE);
 
-        int num = salvaContatos.getInt("numContatos", 0); //checando quantos contatos já tem
+        int num = salvaContatos.getInt("numContatos", 0); // Checando quantos contatos já existem
         SharedPreferences.Editor editor = salvaContatos.edit();
         try {
             ByteArrayOutputStream dt = new ByteArrayOutputStream();
             ObjectOutputStream oos = new ObjectOutputStream(dt);
             dt = new ByteArrayOutputStream();
             oos = new ObjectOutputStream(dt);
-            oos.writeObject(w);
+            oos.writeObject(c);
             String contatoSerializado = dt.toString(StandardCharsets.ISO_8859_1.name());
-            editor.putString("contato" + (num + 1), contatoSerializado);
-            editor.putInt("numContatos", num + 1);
+            editor.putString("contato" + (num + 1), contatoSerializado); // Salvando o contato com número único
+            editor.putInt("numContatos", num + 1); // Salvando quantidade de contatos já salvos
         } catch (Exception e){
             e.printStackTrace();
         }
         editor.commit();
-        user.getContatos().add(w);
+        user.getContatos().add(c);
     }
 
 
     @Override
     protected void onStop() {
         super.onStop();
-        Log.v("PDM","Matando a Activity Lista de Contatos");
+        Log.v("PDMMat","Matando a Activity Lista de Contatos");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.v("PDM","Matei a Activity Lista de Contatos");
+        Log.v("PDMMat","Matei a Activity Lista de Contatos");
     }
 
     // Ações realizadas ao clicar no botão "Buscar"
     public void onClickBuscar(View v){
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_DENIED) {
-            Log.v("PDM", "Pedir permissão");
+            Log.v("PDMMat", "Pedir permissão");
             requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, 3333);
             return;
         }
-        Log.v("PDM", "Tenho permissão");
+        Log.v("PDMMat", "Tenho permissão");
 
         // Com a permissão autorizada, busca os contatos com o nome informado
         ContentResolver cr = getContentResolver();
@@ -124,16 +125,17 @@ public class AlterarContatos_Activity extends AppCompatActivity implements Botto
         String [] argumentosConsulta =  {"%"+edtNome.getText()+"%"};
         Cursor cursor = cr.query(ContactsContract.Contacts.CONTENT_URI, null,
                 consulta,argumentosConsulta, null);
+
         // Depois de recuperar a quantidade de resultados da busca, cria duas strings com a quantidade de resultados
         final String[] nomesContatos = new String[cursor.getCount()];
         final String[] telefonesContatos = new String[cursor.getCount()];
-        Log.v("PDM","Tamanho do cursor:" + cursor.getCount());
+        Log.v("PDMMat","Tamanho do cursor:" + cursor.getCount());
 
         int i = 0;
         while (cursor.moveToNext()) {
             int indiceNome = cursor.getColumnIndexOrThrow(ContactsContract.Contacts.DISPLAY_NAME);
             String contatoNome = cursor.getString(indiceNome);
-            Log.v("PDM", "Contato " + i + ", Nome:" + contatoNome);
+            Log.v("PDMMat", "Contato " + i + ", Nome:" + contatoNome);
             nomesContatos[i] = contatoNome;
             int indiceContatoID = cursor.getColumnIndexOrThrow(ContactsContract.Contacts._ID);
             String contactID = cursor.getString(indiceContatoID);
@@ -143,8 +145,9 @@ public class AlterarContatos_Activity extends AppCompatActivity implements Botto
 
             while (phones.moveToNext()) {
                 String number = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                telefonesContatos[i] = number; //Salvando só último telefone
+                telefonesContatos[i] = number; // Salva quando chega no último telefone
             }
+
             i++;
         }
 
@@ -160,7 +163,7 @@ public class AlterarContatos_Activity extends AppCompatActivity implements Botto
                         Contato c = new Contato();
                         c.setNome(nomesContatos[i]);
                         c.setNumero("tel:+"+telefonesContatos[i]);
-                        salvarContato(c);
+                        salvarContato(c); // Chama função para salvar contato
                         Intent intent = new Intent(getApplicationContext(), ListaDeContatos_Activity.class);
                         intent.putExtra("usuario", user);
                         startActivity(intent);
@@ -181,9 +184,9 @@ public class AlterarContatos_Activity extends AppCompatActivity implements Botto
             startActivity(intent);
 
         }
-        // Checagem de o Item selecionado é o do perfil
+        // Checagem de o Item selecionado é o menu de ligar
         if (item.getItemId() == R.id.anvLigar) {
-            //Abertura da Tela Mudar COntatos
+            // Abertura da Tela contatos salvos
             Intent intent = new Intent(this, ListaDeContatos_Activity.class);
             intent.putExtra("usuario", user);
             startActivity(intent);
