@@ -19,10 +19,10 @@ import com.example.fivecontacts.main.model.User;
 
 public class NovoUsuario_Activity extends AppCompatActivity {
 
-    boolean primeiraVezUser=true;
-    boolean primeiraVezNome=true;
-    boolean primeiraVezEmail=true;
-    boolean primeiraVezSenha=true;
+    boolean primeiraVezUser = true;
+    boolean primeiraVezNome = true;
+    boolean primeiraVezEmail = true;
+    boolean primeiraVezSenha = true;
     EditText edUser;
     EditText edPass;
     EditText edNome;
