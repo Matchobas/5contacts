@@ -48,6 +48,7 @@ public class ListaDeContatos_Activity extends AppCompatActivity implements UIEdu
     TextView deleteTutorial;
 
     boolean holding = false;
+    Uri uriAtual;
     boolean callDenied = false;
 
     @Override
@@ -234,15 +235,19 @@ public class ListaDeContatos_Activity extends AppCompatActivity implements UIEdu
 
 
                 Uri uri = Uri.parse(contatos.get(i).getNumero());
+                uriAtual = uri;
 
                 // Checa se tem permissão para realizar a ligação e se o botão não foi segurado
                 if (checarPermissaoPhone_SMD() && !holding) {
                     Intent itLigar = new Intent(Intent.ACTION_CALL, uri);
                     startActivity(itLigar);
-                } else if(callDenied) {
-                    Intent itLigar = new Intent(Intent.ACTION_DIAL, uri);
-                    startActivity(itLigar);
-                } // Antes de chamar o Dial, a permissão precisa ter sido negada
+                }
+                    /**
+                     * else if(callDenied) {
+                     *                     Intent itLigar = new Intent(Intent.ACTION_DIAL, uri);
+                     *                     startActivity(itLigar);
+                     *                 } // Antes de chamar o Dial, a permissão precisa ter sido negada
+                     */
                 }
             });
 
@@ -287,7 +292,7 @@ public class ListaDeContatos_Activity extends AppCompatActivity implements UIEdu
                 mensagemPermissao.onAttach ((Context)this);
                 mensagemPermissao.show(getSupportFragmentManager(), "primeiravez2");
 
-            } else {
+            } else if (!callDenied) {
                 String mensagem = "Nossa aplicação precisa acessar o telefone para discagem automática. Uma janela de permissão será solicitada em seguida";
                 String titulo = "Pedido de permissão para acesso a chamadas II";
                 int codigo = 1;
@@ -296,6 +301,8 @@ public class ListaDeContatos_Activity extends AppCompatActivity implements UIEdu
                 mensagemPermissao.onAttach ((Context)this);
                 mensagemPermissao.show(getSupportFragmentManager(), "segundavez2");
                 Log.v ("Permissao","Outra Vez");
+            } else {
+                callDeniedExplanation();
             }
         }
 
@@ -312,15 +319,23 @@ public class ListaDeContatos_Activity extends AppCompatActivity implements UIEdu
                    Toast.makeText(this, "VALEU!!!", Toast.LENGTH_LONG).show();
                } else {
                    Toast.makeText(this, "OXE! :(", Toast.LENGTH_LONG).show();
-
-                   String mensagem = "Seu aplicativo pode ligar diretamente, mas sem permissão não funciona. Se você marcou não perguntar mais, você deve ir na tela de configurações para mudar a permissão ou reinstalar o aplicativo";
-                   String titulo = "Porque precisamos da permissão?";
-                   UIEducacionalPermissao mensagemPermisso = new UIEducacionalPermissao(mensagem, titulo,2);
-                   mensagemPermisso.onAttach((Context)this);
-                   mensagemPermisso.show(getSupportFragmentManager(), "segundavez");
+                   callDeniedExplanation();
                }
                break;
         }
+    }
+
+    // Função criada para criar mensagem de explicação, pois o mesmo trecho de código é usado várias vezes
+    public void callDeniedExplanation() {
+        String mensagem = "Seu aplicativo pode ligar diretamente, mas sem permissão não funciona. " +
+                "Se você marcou não perguntar mais, você deve ir na tela de configurações para mudar " +
+                "a permissão ou reinstalar o aplicativo, enquanto isso vamos lhe redirecionar para que possa ligar manualmente";
+        String titulo = "Porque precisamos da permissão?";
+        int codigo = 2;
+
+        UIEducacionalPermissao mensagemPermisso = new UIEducacionalPermissao(mensagem, titulo, codigo);
+        mensagemPermisso.onAttach((Context)this);
+        mensagemPermisso.show(getSupportFragmentManager(), "segundavez");
     }
 
     @Override
@@ -362,9 +377,6 @@ public class ListaDeContatos_Activity extends AppCompatActivity implements UIEdu
             atualizarListaDeContatos(user); // Função que atualiza a lista de contatos
             preencherListViewImagens(user); // Função que monta o ListView
         }
-
-
-
     }
 
     // Função para atualizar as informações do usuário no SharedPreferences
@@ -375,7 +387,7 @@ public class ListaDeContatos_Activity extends AppCompatActivity implements UIEdu
         String senhaSalva = temUser.getString("senha","");
         String nomeSalvo = temUser.getString("nome","");
         String emailSalvo = temUser.getString("email","");
-        boolean manterLogado=temUser.getBoolean("manterLogado",false);
+        boolean manterLogado = temUser.getBoolean("manterLogado",false);
 
         user = new User(nomeSalvo,loginSalvo,senhaSalva,emailSalvo,manterLogado);
         return user;
@@ -390,6 +402,8 @@ public class ListaDeContatos_Activity extends AppCompatActivity implements UIEdu
         }
         if (codigo == 2){
             callDenied = true;
+            Intent itLigar = new Intent(Intent.ACTION_DIAL, uriAtual);
+            startActivity(itLigar);
         }
     }
 }
