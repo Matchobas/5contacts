@@ -47,6 +47,8 @@ public class ListaDeContatos_Activity extends AppCompatActivity implements UIEdu
     TextView titleText;
     TextView deleteTutorial;
 
+    boolean holding = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -160,8 +162,13 @@ public class ListaDeContatos_Activity extends AppCompatActivity implements UIEdu
                 switch (which){
                     case DialogInterface.BUTTON_POSITIVE:
                         deletarContatoDaLista(c);
+                        holding = false;
                         break;
                     case DialogInterface.BUTTON_NEGATIVE:
+                        holding = false;
+                        break;
+                    default:
+                        holding = false;
                         break;
                 }
             }
@@ -172,6 +179,7 @@ public class ListaDeContatos_Activity extends AppCompatActivity implements UIEdu
         builder.setMessage("Vocẽ realmente quer deletar esse contato?")
                 .setPositiveButton("Sim", dialogClickListener)
                 .setNegativeButton("Não", dialogClickListener)
+                .setCancelable(false)
                 .show();
 
         return false;
@@ -206,7 +214,7 @@ public class ListaDeContatos_Activity extends AppCompatActivity implements UIEdu
             // Criando um array de várias chaves ligadas a objetos para criar o Adapter
             final ArrayList<Map<String,Object>> itemDataList = new ArrayList<Map<String,Object>>();;
 
-            for(int i =0; i < contatos.size(); i++) {
+            for(int i = 0; i < contatos.size(); i++) {
                 Map<String,Object> listItemMap = new HashMap<String,Object>();
                 listItemMap.put("imageId", R.drawable.ic_action_ligar_list);
                 listItemMap.put("contato", contatosNomes[i]);
@@ -223,8 +231,8 @@ public class ListaDeContatos_Activity extends AppCompatActivity implements UIEdu
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                // Checa se tem permissão para realizar a ligação
-                if (checarPermissaoPhone_SMD()) {
+                // Checa se tem permissão para realizar a ligação e se o botão não foi segurado
+                if (checarPermissaoPhone_SMD() && !holding) {
 
                     Uri uri = Uri.parse(contatos.get(i).getNumero());
                     // FAZER possibilidade de ir para DIAL!
@@ -239,6 +247,7 @@ public class ListaDeContatos_Activity extends AppCompatActivity implements UIEdu
             lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                 @Override
                 public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                    holding = true; // Impede que a função de clique de ligação também seja chamada
                     Contato contato = contatos.get(position);
                     deleteDialog(contato);
 
