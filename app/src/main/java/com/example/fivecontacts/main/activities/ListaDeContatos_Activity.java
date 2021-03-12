@@ -48,6 +48,7 @@ public class ListaDeContatos_Activity extends AppCompatActivity implements UIEdu
     TextView deleteTutorial;
 
     boolean holding = false;
+    boolean callDenied = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -231,15 +232,17 @@ public class ListaDeContatos_Activity extends AppCompatActivity implements UIEdu
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
+
+                Uri uri = Uri.parse(contatos.get(i).getNumero());
+
                 // Checa se tem permissão para realizar a ligação e se o botão não foi segurado
                 if (checarPermissaoPhone_SMD() && !holding) {
-
-                    Uri uri = Uri.parse(contatos.get(i).getNumero());
-                    // FAZER possibilidade de ir para DIAL!
-                    // Intent itLigar = new Intent(Intent.ACTION_DIAL, uri);
                     Intent itLigar = new Intent(Intent.ACTION_CALL, uri);
                     startActivity(itLigar);
-                }
+                } else if(callDenied) {
+                    Intent itLigar = new Intent(Intent.ACTION_DIAL, uri);
+                    startActivity(itLigar);
+                } // Antes de chamar o Dial, a permissão precisa ter sido negada
                 }
             });
 
@@ -310,9 +313,9 @@ public class ListaDeContatos_Activity extends AppCompatActivity implements UIEdu
                } else {
                    Toast.makeText(this, "OXE! :(", Toast.LENGTH_LONG).show();
 
-                   String mensagem= "Seu aplicativo pode ligar diretamente, mas sem permissão não funciona. Se você marcou não perguntar mais, você deve ir na tela de configurações para mudar a instalação ou reinstalar o aplicativo";
-                   String titulo= "Porque precisamos da permissão?";
-                   UIEducacionalPermissao mensagemPermisso = new UIEducacionalPermissao(mensagem,titulo,2);
+                   String mensagem = "Seu aplicativo pode ligar diretamente, mas sem permissão não funciona. Se você marcou não perguntar mais, você deve ir na tela de configurações para mudar a permissão ou reinstalar o aplicativo";
+                   String titulo = "Porque precisamos da permissão?";
+                   UIEducacionalPermissao mensagemPermisso = new UIEducacionalPermissao(mensagem, titulo,2);
                    mensagemPermisso.onAttach((Context)this);
                    mensagemPermisso.show(getSupportFragmentManager(), "segundavez");
                }
@@ -382,9 +385,11 @@ public class ListaDeContatos_Activity extends AppCompatActivity implements UIEdu
     public void onDialogPositiveClick(int codigo) {
 
         if (codigo == 1){
-          String[] permissions ={Manifest.permission.CALL_PHONE};
+          String[] permissions = {Manifest.permission.CALL_PHONE};
           requestPermissions(permissions, 2222);
-
+        }
+        if (codigo == 2){
+            callDenied = true;
         }
     }
 }

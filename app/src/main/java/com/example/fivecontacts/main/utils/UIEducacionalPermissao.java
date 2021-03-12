@@ -14,9 +14,9 @@ public  class UIEducacionalPermissao extends DialogFragment {
     String titulo;
     int codigo; //Código do Dialog
     public UIEducacionalPermissao(String mensagem, String titulo, int codigo){
-        this.mensagem=mensagem;
-        this.titulo=titulo;
-        this.codigo=codigo;
+        this.mensagem = mensagem;
+        this.titulo = titulo;
+        this.codigo = codigo;
     }
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
