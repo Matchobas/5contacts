@@ -242,12 +242,6 @@ public class ListaDeContatos_Activity extends AppCompatActivity implements UIEdu
                     Intent itLigar = new Intent(Intent.ACTION_CALL, uri);
                     startActivity(itLigar);
                 }
-                    /**
-                     * else if(callDenied) {
-                     *                     Intent itLigar = new Intent(Intent.ACTION_DIAL, uri);
-                     *                     startActivity(itLigar);
-                     *                 } // Antes de chamar o Dial, a permissão precisa ter sido negada
-                     */
                 }
             });
 

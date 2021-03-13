@@ -33,7 +33,7 @@ import java.nio.charset.StandardCharsets;
 
 public class AlterarContatos_Activity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
-    Boolean primeiraVezUser=true;
+    Boolean primeiraVezUser = true;
     EditText edtNome;
     ListView lv;
     BottomNavigationView bnv;
@@ -58,6 +58,7 @@ public class AlterarContatos_Activity extends AppCompatActivity implements Botto
                 setTitle("Alterar Contatos de Emergência");
             }
         }
+
         lv = findViewById(R.id.listContatosDoCell);
 
         // Evento de limpar Componente
